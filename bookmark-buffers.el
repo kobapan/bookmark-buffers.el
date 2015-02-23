@@ -74,8 +74,7 @@
  [enter]: 現在開いているファイルを全て閉じて、選択したブックマークに登録してあったファイルをすべて開く。
  [d]: ブックマークを削除。y or n。
  [q]: ブックマーク一覧モード終了
- [e]: ブックマーク編集モード。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。
-"
+ [e]: ブックマーク編集。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。"
   (interactive)
   (let ((blist-buffer "*blist*") (map (make-sparse-keymap)))
     (set-buffer (find-file-noselect blist-file))
