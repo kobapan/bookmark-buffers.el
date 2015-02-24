@@ -3,7 +3,7 @@
 ;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 22:28:02>
+;; Last Modified: <2015/02/24 22:28:47>
 ;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -126,7 +126,7 @@
 
 
 (defun buffer-list-real ()
-  "list up files and directories `full path` in buffer list"
+  "list up files and directories `full path` from buffer list"
   (delq nil (mapcar
    (lambda (x)
      (set-buffer x)
