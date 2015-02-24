@@ -1,6 +1,10 @@
-;; bookmark-buffers.el -*-mode: Emacs-Lisp; tab-width: 4;-*- .
+;; -*-mode: Emacs-Lisp; tab-width: 4;-*- .
 
+;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
+;;
+;; Last Modified: <2015/02/24 16:27:57>
+;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,15 +20,14 @@
 ;; along with this program; if not, write to the Free Software
 ;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;;
-;; Date       : 2015-02-23 23:40:04
-;; Author     : Kobayashi Takaaki <kobapan at gmail dot com>
 
 ;; Installation
 ;;
 ;; Add bookmark-buffers.el to your load path
 ;; add your .emacs
 ;;
-;; (require 'bookmark-buffers)
+;; (autoload 'bookmark-buffers-save "bookmark-buffers" nil t)
+;; (autoload 'bookmark-buffers-call "bookmark-buffers" nil t)
 ;; (global-set-key [(control f3)] 'bookmark-buffers-save)
 ;; (global-set-key [(control f4)] 'bookmark-buffers-call)
 ;;
@@ -38,6 +41,12 @@
 ;;
 ;;
 
+;; TODO
+;; apropos to save
+;; auto save with default blist-key
+;; auto call with default blist-key
+;; edit bookmark list
+;; edit file list in a bookmark
 
 ;(setq debug-on-error t)
 ; M-x edebug-defun
