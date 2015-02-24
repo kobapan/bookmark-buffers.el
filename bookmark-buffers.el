@@ -3,7 +3,7 @@
 ;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 16:37:40>
+;; Last Modified: <2015/02/24 20:42:10>
 ;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -53,18 +53,22 @@
 
 (defvar blist-file "~/.blist")
 
-(defun bookmark-buffers-save (blist-key)
+(defun bookmark-buffers-save ()
   "「現在バッファに開いているファイルとディレクトリのパス」をblist-keyというブックマークで保存する"
-  (interactive "sListName: ") ;; TODO apropos
-  (let (all-blists-alist
+  (interactive)
+  (let (blist-key
+        all-blists-alist
         this-blist-alist
-        (files (buffer-file-list)))
+        completion-alist
+        (files (buffer-list-real)))
     (set-buffer (find-file-noselect blist-file))
     (widen)
     (goto-char (point-min))
     (condition-case err
-        (setq all-blists-alist (read (current-buffer))) ;; .blistからブックマークのリストを読み込む
+        (and (setq all-blists-alist (read (current-buffer))) ;; .blistからブックマークのリストを読み込む
+             (setq completion-alist (mapcar (lambda (x) (car x)) all-blists-alist)))
       (error (message "init .blist")))
+    (setq blist-key (completing-read  "BListKey: " completion-alist))
     (if (setq this-blist-alist (assoc blist-key all-blists-alist)) ;; ブックマークのリストから連想配列のキーがblist-keyの要素を取り出す
         (progn
           (setcdr (cadr this-blist-alist)
@@ -121,15 +125,13 @@
     (kill-buffer buffer-blist-file)))
 
 
-(defun buffer-file-list ()
-  "list up files and directories open"
+(defun buffer-list-real ()
+  "list up files and directories in buffer list"
   (delq nil (mapcar
-             (lambda (x)
-               (let ((d (buffer-name x)) (f (buffer-file-name x)))
-                 (if (file-directory-p d)
-                     (expand-file-name d)
-                   f)))
-             (buffer-list))))
+   (lambda (x)
+     (set-buffer x)
+     (or (buffer-file-name) list-buffers-directory))
+   (buffer-list))))
 
 (defun kill-all-buffers ()
   "kill all buffers"
