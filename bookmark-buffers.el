@@ -3,7 +3,7 @@
 ;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 16:34:28>
+;; Last Modified: <2015/02/24 16:37:40>
 ;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@
 ;; Ctrl + F3 to save buffers which are now open
 ;;
 ;; Ctrl + F4 to open bookmark list
-;; and to open all buffers which are listed in a bookmark, type ENTER or double left click on a bookmark name in the list.
+;; type ENTER or double left click on a bookmark name in the list, and files and directories which are listed in the bookmark will be open. 
 ;;
 ;;
 
