@@ -3,7 +3,7 @@
 ;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 22:28:47>
+;; Last Modified: <2015/02/24 22:39:36>
 ;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -28,8 +28,8 @@
 ;;
 ;; (autoload 'bookmark-buffers-save "bookmark-buffers" nil t)
 ;; (autoload 'bookmark-buffers-call "bookmark-buffers" nil t)
-;; (global-set-key [(control f3)] 'bookmark-buffers-save)
-;; (global-set-key [(control f4)] 'bookmark-buffers-call)
+;; (global-set-key (kbd "C-c b s") 'bookmark-buffers-save)
+;; (global-set-key (kbd "C-c b c") 'bookmark-buffers-call)
 ;;
 
 ;; Usage
@@ -110,7 +110,6 @@
     (define-key map "q" 'blist-quit)
     (use-local-map map)))
 
-
 (defun blist-open ()
   "open listed files"
   (interactive)
@@ -124,6 +123,10 @@
             (cadr (assoc blist-key (read (current-buffer)))))
     (kill-buffer buffer-blist-file)))
 
+(defun blist-quit ()
+  "kill blist buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
 
 (defun buffer-list-real ()
   "list up files and directories `full path` from buffer list"
