@@ -3,7 +3,7 @@
 ;; bookmark-buffers.el 
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 16:27:57>
+;; Last Modified: <2015/02/24 16:34:28>
 ;; Auther: <kobapan>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
