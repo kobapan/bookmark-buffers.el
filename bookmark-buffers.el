@@ -1,11 +1,13 @@
 ;; -*-mode: Emacs-Lisp; tab-width: 4;-*- .
 
-;; bookmark-buffers.el 
+;; Information: <bookmark-buffers.el>
+;;
 ;; bookmark buffers list and open buffers list
 ;;
-;; Last Modified: <2015/02/24 22:39:36>
+;; Last Modified: <2015/02/28 04:29:30>
 ;; Auther: <kobapan>
 ;;
+
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2 of the License, or
@@ -34,24 +36,30 @@
 
 ;; Usage
 ;;
-;; Ctrl + F3 to save buffers which are now open
+;; Ctrl+c b s to save buffers list with a key name
 ;;
-;; Ctrl + F4 to open bookmark list
-;; type ENTER or double left click on a bookmark name in the list, and files and directories which are listed in the bookmark will be open. 
+;; Ctrl+c b c to call bookmark list
+;; type ENTER or double left click on a bookmark name in the list, and files and directories which are listed in the bookmark will be open.
 ;;
 ;;
 
 ;; TODO
-;; apropos to save
-;; auto save with default blist-key
-;; auto call with default blist-key
-;; edit bookmark list
-;; edit file list in a bookmark
+;; - save with default , last visited blist-key
+;; - call with default , last visited blist-key
+;; - sort bookmark list as now open/save blist-key first when visit it
+;; - edit bookmark list
+;; - edit file list in a bookmark
 
-;(setq debug-on-error t)
+; (setq debug-on-error t)
 ; M-x edebug-defun
 
+
+;;;;;; private variables
+
 (defvar blist-file "~/.blist")
+
+
+;;;;;; interactive functions
 
 (defun bookmark-buffers-save ()
   "「現在バッファに開いているファイルとディレクトリのパス」をblist-keyというブックマークで保存する"
@@ -59,20 +67,20 @@
   (let (blist-key
         all-blists-alist
         this-blist-alist
-        completion-alist
+        copy
         (files (buffer-list-real)))
     (set-buffer (find-file-noselect blist-file))
     (widen)
     (goto-char (point-min))
     (condition-case err
-        (and (setq all-blists-alist (read (current-buffer))) ;; .blistからブックマークのリストを読み込む
-             (setq completion-alist (mapcar (lambda (x) (car x)) all-blists-alist)))
+        (setq all-blists-alist (read (current-buffer))) ;; .blistからブックマークのリストを読み込む
       (error (message "init .blist")))
-    (setq blist-key (completing-read  "BListKey: " completion-alist))
+    (setq blist-key (completing-read  "bookmark buffers list with Key Name: "
+                                      (mapcar (lambda (x) (car x)) all-blists-alist)))
     (if (setq this-blist-alist (assoc blist-key all-blists-alist)) ;; ブックマークのリストから連想配列のキーがblist-keyの要素を取り出す
         (progn
-          (setcdr (cadr this-blist-alist)
-                  (cons (caadr this-blist-alist) files)) ;; 追加登録 TODO 上書きモードをオプションで選べるようにする
+          (setq copy (copy-alist (cadr this-blist-alist)))
+          (setcdr (cadr this-blist-alist) (append files copy))
           (delete-dups (cadr this-blist-alist)))
       (setq this-blist-alist (list blist-key files))
       (setq all-blists-alist (cons this-blist-alist all-blists-alist)))
@@ -105,28 +113,36 @@
                        "\n"))
     (setq buffer-read-only t)   ; lock
     (setq mode-name "blist-mode")
-    (define-key map [double-mouse-1] 'blist-open)
-    (define-key map [return] 'blist-open)
-    (define-key map "q" 'blist-quit)
+    (define-key map [double-mouse-1] 'bookmark-buffers-open)
+    (define-key map [return] 'bookmark-buffers-open)
+    (define-key map "q" 'bookmark-buffers-quit)
     (use-local-map map)))
 
-(defun blist-open ()
-  "open listed files"
+(defun bookmark-buffers-open ()
+  "open files and directories in a bookmark"
   (interactive)
-  (let ((blist-key (buffer-substring (progn (beginning-of-line) (point)) (progn (end-of-line) (point))))
-        buffer-blist-file)
+  (let ((blist-key (buffer-substring
+                    (progn (beginning-of-line) (point))
+                    (progn (end-of-line) (point))))
+        (buffer-blist-file (find-file blist-file))
+        (bookmark-list (progn (widen)
+                              (goto-char (point-min))
+                              (read (current-buffer)))))
     (kill-all-buffers)
-    (setq buffer-blist-file (set-buffer (find-file-noselect blist-file)))
-    (widen)
-    (goto-char (point-min))
     (mapcar '(lambda (file) (find-file file))
-            (cadr (assoc blist-key (read (current-buffer)))))
+            (reverse (cadr (assoc blist-key bookmark-list))))
     (kill-buffer buffer-blist-file)))
 
-(defun blist-quit ()
+(defun bookmark-buffers-quit ()
   "kill blist buffer"
   (interactive)
   (kill-buffer (current-buffer)))
+
+
+;;;;;; private functions
+
+;(defun sort
+
 
 (defun buffer-list-real ()
   "list up files and directories `full path` from buffer list"
