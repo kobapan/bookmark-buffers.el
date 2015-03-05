@@ -2,9 +2,9 @@
 
 ;; Information: <bookmark-buffers.el>
 ;;
-;; bookmark buffers list and open buffers list
+;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/02/28 04:29:30>
+;; Last Modified: <2015/03/05 19:20:29>
 ;; Auther: <kobapan>
 ;;
 
@@ -67,7 +67,6 @@
   (let (blist-key
         all-blists-alist
         this-blist-alist
-        copy
         (files (buffer-list-real)))
     (set-buffer (find-file-noselect blist-file))
     (widen)
@@ -79,8 +78,7 @@
                                       (mapcar (lambda (x) (car x)) all-blists-alist)))
     (if (setq this-blist-alist (assoc blist-key all-blists-alist)) ;; ブックマークのリストから連想配列のキーがblist-keyの要素を取り出す
         (progn
-          (setq copy (copy-alist (cadr this-blist-alist)))
-          (setcdr (cadr this-blist-alist) (append files copy))
+          (setf (cadr this-blist-alist) (append files (cadr this-blist-alist)))
           (delete-dups (cadr this-blist-alist)))
       (setq this-blist-alist (list blist-key files))
       (setq all-blists-alist (cons this-blist-alist all-blists-alist)))
@@ -141,8 +139,9 @@
 
 ;;;;;; private functions
 
-;(defun sort
-
+(defun sort-bookmark-list (blist-key)
+  "blist-key のものを先頭に"
+  )
 
 (defun buffer-list-real ()
   "list up files and directories `full path` from buffer list"
