@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/05 19:20:29>
+;; Last Modified: <2015/03/12 17:42:28>
 ;; Auther: <kobapan>
 ;;
 
@@ -46,7 +46,8 @@
 ;; TODO
 ;; - save with default , last visited blist-key
 ;; - call with default , last visited blist-key
-;; - sort bookmark list as now open/save blist-key first when visit it
+;; - call with new
+;; - sort bookmark list as open/save blist-key first
 ;; - edit bookmark list
 ;; - edit file list in a bookmark
 
@@ -67,20 +68,19 @@
   (let (blist-key
         all-blists-alist
         this-blist-alist
-        (files (buffer-list-real)))
+        (completion-ignore-case t))
     (set-buffer (find-file-noselect blist-file))
     (widen)
     (goto-char (point-min))
     (condition-case err
         (setq all-blists-alist (read (current-buffer))) ;; .blistからブックマークのリストを読み込む
       (error (message "init .blist")))
-    (setq blist-key (completing-read  "bookmark buffers list with Key Name: "
-                                      (mapcar (lambda (x) (car x)) all-blists-alist)))
+    (setq blist-key (read-something all-blists-alist))
     (if (setq this-blist-alist (assoc blist-key all-blists-alist)) ;; ブックマークのリストから連想配列のキーがblist-keyの要素を取り出す
         (progn
-          (setf (cadr this-blist-alist) (append files (cadr this-blist-alist)))
+          (setf (cadr this-blist-alist) (append (buffer-list-real) (cadr this-blist-alist)))
           (delete-dups (cadr this-blist-alist)))
-      (setq this-blist-alist (list blist-key files))
+      (setq this-blist-alist (list blist-key (buffer-list-real)))
       (setq all-blists-alist (cons this-blist-alist all-blists-alist)))
     (erase-buffer)
     (prin1 all-blists-alist (current-buffer))
@@ -95,7 +95,9 @@
  [q]: ブックマーク一覧モード終了
  [e]: ブックマーク編集。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。"
   (interactive)
-  (let ((blist-buffer "*blist*") (map (make-sparse-keymap)))
+  (let ((blist-buffer "*blist*")
+        (map (make-sparse-keymap))
+        all-blists-alist)
     (set-buffer (find-file-noselect blist-file))
     (widen)
     (goto-char (point-min))
@@ -138,6 +140,14 @@
 
 
 ;;;;;; private functions
+
+(defun read-something (alist)
+  "dont save with 0byte key name"
+  (let ((res (completing-read
+              "bookmark buffers list with Key Name: "
+              (mapcar (lambda (slot) (car slot)) alist))))
+    (or (if (string< "" res) res)
+        (read-something alist))))
 
 (defun sort-bookmark-list (blist-key)
   "blist-key のものを先頭に"
