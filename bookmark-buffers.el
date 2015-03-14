@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/14 23:12:06>
+;; Last Modified: <2015/03/14 23:15:42>
 ;; Auther: <kobapan>
 ;;
 
@@ -45,8 +45,7 @@
 
 ;; TODO
 ;; - save with default , last visited blist-key
-;; - call with default , last visited blist-key
-;; - call with new
+;; - edit bookmark list
 ;; - edit file list in a bookmark
 
 ; (setq debug-on-error t)
