@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/14 23:15:42>
+;; Last Modified: <2015/03/20 00:18:26>
 ;; Auther: <kobapan>
 ;;
 
@@ -65,18 +65,13 @@ nil : overwite buffers list with current buffers")
 ;;;;;; interactive functions
 
 (defun bookmark-buffers-save ()
-  "「現在バッファに開いているファイルとディレクトリのパス」をblist-keyというブックマークで保存する"
+  "「現在バッファに開いているファイルとディレクトリのパス」のリストをブックマークする"
   (interactive)
-  (let (blist-key
-        bookmark-list
-        this-blist
-        (completion-ignore-case t))
-    (set-buffer (find-file-noselect blist-file))
-    (widen)
-    (goto-char (point-min))
-    (condition-case err
-        (setq bookmark-list (read (current-buffer))) ;; .blistからバッファリストのリストを読み込む
-      (error (message "init .blist")))
+  (let* (blist-key
+         (buffer-blist-file (set-buffer (find-file-noselect blist-file)))
+         (bookmark-list (get-bookmark-list))
+         this-blist
+         (completion-ignore-case t))
     (setq blist-key (read-something-with bookmark-list))
     (if (setq this-blist (assoc blist-key bookmark-list)) ;; blist-keyのバッファリストがあったら、
         (progn
@@ -100,13 +95,10 @@ nil : overwite buffers list with current buffers")
  [q]: ブックマーク一覧モード終了
  [e]: ブックマーク編集。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。"
   (interactive)
-  (let ((blist-buffer "*blist*")
-        (map (make-sparse-keymap))
-        bookmark-list)
-    (set-buffer (find-file-noselect blist-file))
-    (widen)
-    (goto-char (point-min))
-    (setq bookmark-list (read (current-buffer)))
+  (let* ((blist-buffer "*blist*")
+         (map (make-sparse-keymap))
+         (buffer-blist-file (set-buffer (find-file-noselect blist-file)))
+         (bookmark-list (get-bookmark-list)))
     (switch-to-buffer blist-buffer)
     (setq buffer-read-only nil) ; unlock
     (erase-buffer)
@@ -132,9 +124,7 @@ nil : overwite buffers list with current buffers")
                      (progn (beginning-of-line) (point))
                      (progn (end-of-line) (point))))
          (buffer-blist-file (set-buffer (find-file-noselect blist-file)))
-         (bookmark-list (progn (widen)
-                               (goto-char (point-min))
-                               (read (current-buffer))))
+         (bookmark-list (get-bookmark-list))
          (this-blist (assoc blist-key bookmark-list)))
     (setq bookmark-list (sort-bookmark-list this-blist bookmark-list)) ;; カレントなバッファリストを先頭に並べ替え
     (erase-buffer)
@@ -152,9 +142,7 @@ nil : overwite buffers list with current buffers")
                      (progn (beginning-of-line) (point))
                      (progn (end-of-line) (point))))
          (buffer-blist-file (set-buffer (find-file-noselect blist-file)))
-         (bookmark-list (progn (widen)
-                               (goto-char (point-min))
-                               (read (current-buffer))))
+         (bookmark-list (get-bookmark-list))
          (this-blist (assoc blist-key bookmark-list)))
     (when (y-or-n-p (concat "delete " blist-key " ? "))
       (setq bookmark-list (delq this-blist bookmark-list))
@@ -201,5 +189,13 @@ nil : overwite buffers list with current buffers")
                  (unless (member buf exclude)
                    (kill-buffer buf))))
             (buffer-list))))
+
+(defun get-bookmark-list ()
+  (widen)
+  (goto-char (point-min))
+  (condition-case err
+      (read (current-buffer)) ;; .blistからバッファリストのリストを読み込む
+    (error (message "init .blist"))))
+
 
 (provide 'bookmark-buffers)
