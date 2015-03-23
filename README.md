@@ -5,11 +5,22 @@
 バッファリストに名前をつけてブックマークしておく感じのもの。
 
 
-## bookmark-buffers-save ()
+## Installation
+
+Add bookmark-buffers.el to your load path
+add your .emacs
+```cl
+(autoload 'bookmark-buffers-save "bookmark-buffers" nil t)
+(autoload 'bookmark-buffers-call "bookmark-buffers" nil t)
+(global-set-key (kbd "C-c b s") 'bookmark-buffers-save)
+(global-set-key (kbd "C-c b c") 'bookmark-buffers-call)
+```
+
+## C-c b s
 「現在開いているファイルとディレクトリのパス」の一覧に名前をつけて保存する。
 
 
-## bookmark-buffers-call ()
+## C-c b c
 ブックマーク一覧モードへ
 
 一覧の中のブックマークをひとつポイントし、
