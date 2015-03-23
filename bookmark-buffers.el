@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/23 19:11:47>
+;; Last Modified: <2015/03/23 19:12:48>
 ;; Auther: <kobapan>
 ;;
 
@@ -42,9 +42,6 @@
 ;; type ENTER or double left click on a bookmark name in the list, and files and directories which are listed in the bookmark will be open.
 ;;
 ;;
-
-; (setq debug-on-error t)
-; M-x edebug-defun
 
 
 ;;;;;; custom variables
