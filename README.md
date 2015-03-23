@@ -29,6 +29,7 @@ Add your .emacs
 ;;  4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
 ;;   4.1. Type `d' on a file to delete from the bookmark
 ;;   4.2. Type `q' to cancel Editing mode
+;;
 ```
 
 ## C-c b s
