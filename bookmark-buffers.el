@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/23 19:12:48>
+;; Last Modified: <2015/03/23 19:20:01>
 ;; Auther: <kobapan>
 ;;
 
@@ -39,9 +39,12 @@
 ;; Ctrl+c b s to save buffers list with a key name
 ;;
 ;; Ctrl+c b c to call bookmark list
-;; type ENTER or double left click on a bookmark name in the list, and files and directories which are listed in the bookmark will be open.
-;;
-;;
+;; 1. Type ENTER, or Double Click, on a bookmark name to open it.
+;; 2. Type `d' to delete a bookmark on a bookmark name.
+;; 3. Type `q' to cancel
+;; 4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
+;;    4.1. Type `d' on a file to delete from the bookmark
+;;    4.2. Type `q' to cancel Editing mode
 
 
 ;;;;;; custom variables
@@ -123,7 +126,7 @@ nil : overwite buffers list with current buffers")
      (erase-buffer)
      (insert (concat "Editing a bookmark [" (car this-blist) "]\n"))
      (insert "Type `d' on a file to delete from the bookmark.\n")
-     (insert "Type `q' to cancel.\n\n")
+     (insert "Type `q' to cancel Editing mode.\n\n")
      (put-bookmark-list bookmark-list)
      (save-excursion
        (mapcar (lambda (file)
