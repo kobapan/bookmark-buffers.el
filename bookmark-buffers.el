@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/23 19:20:01>
+;; Last Modified: <2015/03/23 19:20:47>
 ;; Auther: <kobapan>
 ;;
 
@@ -36,9 +36,9 @@
 
 ;; Usage
 ;;
-;; Ctrl+c b s to save buffers list with a key name
+;; C-c b s to save buffers list with a key name
 ;;
-;; Ctrl+c b c to call bookmark list
+;; C-c b c to call bookmark list
 ;; 1. Type ENTER, or Double Click, on a bookmark name to open it.
 ;; 2. Type `d' to delete a bookmark on a bookmark name.
 ;; 3. Type `q' to cancel
