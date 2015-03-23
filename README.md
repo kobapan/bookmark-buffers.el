@@ -8,7 +8,8 @@
 ## Installation
 
 Add bookmark-buffers.el to your load path
-add your .emacs
+
+Add your .emacs
 ```cl
 (autoload 'bookmark-buffers-save "bookmark-buffers" nil t)
 (autoload 'bookmark-buffers-call "bookmark-buffers" nil t)
