@@ -26,8 +26,10 @@ Add your .emacs
 
 一覧の中のブックマークをひとつポイントし、
 
-### enter
-### double left click
+_enter_
+
+_double left click_
+
 現在開いているファイルを全て閉じて、選択したブックマーク名に登録しておいたファイル・ディレクトリをすべて開く。
 
 ### d
