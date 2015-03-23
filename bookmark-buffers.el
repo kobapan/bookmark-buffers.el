@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/23 18:17:20>
+;; Last Modified: <2015/03/23 19:11:47>
 ;; Auther: <kobapan>
 ;;
 
@@ -43,24 +43,20 @@
 ;;
 ;;
 
-;; TODO
-;; - save with default , last visited blist-key
-;; - edit bookmark list
-;; - edit file list in a bookmark
-
 ; (setq debug-on-error t)
 ; M-x edebug-defun
 
 
-;;;;;; private variables
-
-(defvar blist-file "~/.emacs.d/.blist")
+;;;;;; custom variables
 
 (defcustom blist-save-append nil
 "custom variable used in bookmark-buffers.el
 t : save buffers list appending current buffers
 nil : overwite buffers list with current buffers")
 
+;;;;;; private variables
+
+(defvar blist-file "~/.emacs.d/.blist")
 
 ;;;;;; interactive functions
 
