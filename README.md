@@ -17,6 +17,20 @@ Add your .emacs
 (global-set-key (kbd "C-c b c") 'bookmark-buffers-call)
 ```
 
+## Usage
+```cl
+;;
+;; C-c b s to save buffers list with a key name
+;;
+;; C-c b c to call bookmark list
+;;  1. Type ENTER, or Double Click, on a bookmark name to open it.
+;;  2. Type `d' to delete a bookmark on a bookmark name.
+;;  3. Type `q' to cancel
+;;  4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
+;;   4.1. Type `d' on a file to delete from the bookmark
+;;   4.2. Type `q' to cancel Editing mode
+```
+
 ## C-c b s
 「現在開いているファイルとディレクトリのパス」の一覧に名前をつけて保存する。
 
@@ -44,16 +58,4 @@ _q_
 
 ブックマーク一覧モード終了
 
-```cl
-;; Usage
-;;
-;; C-c b s to save buffers list with a key name
-;;
-;; C-c b c to call bookmark list
-;;  1. Type ENTER, or Double Click, on a bookmark name to open it.
-;;  2. Type `d' to delete a bookmark on a bookmark name.
-;;  3. Type `q' to cancel
-;;  4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
-;;   4.1. Type `d' on a file to delete from the bookmark
-;;   4.2. Type `q' to cancel Editing mode
-```
+
