@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/23 19:20:47>
+;; Last Modified: <2015/03/25 13:17:57>
 ;; Auther: <kobapan>
 ;;
 
@@ -60,25 +60,25 @@ nil : overwite buffers list with current buffers")
 
 ;;;;;; interactive functions
 
+;;;###autoload
 (defun bookmark-buffers-save ()
   "「現在バッファに開いているファイルとディレクトリのパス」のリストをブックマークする"
   (interactive)
-  (let ((bookmark-list (load-bookmark-list))
-        blist-key
-        this-blist
-        (completion-ignore-case t))
-    (setq blist-key (read-something-with bookmark-list))
-    (if (setq this-blist (assoc blist-key bookmark-list))
+  (let* ((bookmark-list (load-bookmark-list))
+         (blist-key (read-something-with bookmark-list))
+         (this-blist (assoc blist-key bookmark-list))
+         (completion-ignore-case t))
+    (if this-blist
         (progn
           (setf (cadr this-blist)
                 (if blist-save-append
                     (delete-dups (append (buffer-list-real) (cadr this-blist))) ;; 追加
                   (buffer-list-real)))                                          ;; 上書き
           (setq bookmark-list (sort-bookmark-list this-blist bookmark-list)))
-      (setq this-blist (list blist-key (buffer-list-real)))
-      (setq bookmark-list (cons this-blist bookmark-list)))
+      (setq bookmark-list (cons (list blist-key (buffer-list-real)) bookmark-list))) ;; 新規
     (save-bookmark-list bookmark-list)))
 
+;;;###autoload
 (defun bookmark-buffers-call ()
   "ブックマーク一覧モード
  一覧の中のブックマークをひとつポイントし、
@@ -135,11 +135,11 @@ nil : overwite buffers list with current buffers")
                  (insert "\n"))
                (cadr this-blist)))
      (setq buffer-read-only t)   ; lock
-     (define-key map "d" 'bookmark-buffers-save-edit)
+     (define-key map "d" 'bookmark-buffers-edit-save)
      (define-key map "q" 'bookmark-buffers-call)
      (use-local-map map)))
 
-(defun bookmark-buffers-save-edit ()
+(defun bookmark-buffers-edit-save ()
   "save edited bookmark"
   (interactive)
   (let ((file (get-one-file))
@@ -252,10 +252,10 @@ nil : overwite buffers list with current buffers")
 (defun kill-all-buffers ()
   "kill all buffers"
   (let ((exclude '("*scratch*" "*Messages*")))
-    (mapcar '(lambda (b)
-               (let ((buf (buffer-name b)))
-                 (unless (member buf exclude)
-                   (kill-buffer buf))))
+    (mapcar (lambda (b)
+              (let ((buf (buffer-name b)))
+                (unless (member buf exclude)
+                  (kill-buffer buf))))
             (buffer-list))))
 
 (provide 'bookmark-buffers)
