@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/03/25 21:30:04>
+;; Last Modified: <2015/04/05 10:31:15>
 ;; Auther: <kobapan>
 ;;
 
@@ -36,15 +36,15 @@
 
 ;; Usage
 ;;
-;; C-c b s to save buffers list with a key name
+;; C-c b s to name a buffers list and save in the buffers' bookmarks
 ;;
-;; C-c b c to call bookmark list
+;; C-c b c to call the buffers' bookmarks
 ;; 1. Type ENTER, or Double Click, on a bookmark name to open it.
-;; 2. Type `d' to delete a bookmark on a bookmark name.
+;; 2. Type `d' on a bookmark name to delete the bookmark.
 ;; 3. Type `q' to cancel
-;; 4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
-;;    4.1. Type `d' on a file to delete from the bookmark
-;;    4.2. Type `q' to cancel Editing mode
+;; 4. Type `e' on a bookmark name to edit the bookmark.(goto Editing mode)
+;;    4.1. Type `d' on a file to delete from the bookmark.
+;;    4.2. Type `q' to cancel Editing mode.
 
 
 ;;;;;; custom variables
@@ -115,7 +115,8 @@ nil : overwite buffers list with current buffers")
      (define-key map "e" 'bookmark-buffers-edit)
      (define-key map "q" 'bookmark-buffers-quit)
      (use-local-map map)
-     (isearch-forward)))
+     ;(isearch-forward)
+     ))
 
 (defun bookmark-buffers-edit ()
   "edit a bookmark"

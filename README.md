@@ -19,17 +19,15 @@ Add your .emacs
 
 ## Usage
 ```cl
+;; C-c b s to name a buffers list and save in the buffers' bookmarks
 ;;
-;; C-c b s to save buffers list with a key name
-;;
-;; C-c b c to call bookmark list
-;;  1. Type ENTER, or Double Click, on a bookmark name to open it.
-;;  2. Type `d' to delete a bookmark on a bookmark name.
-;;  3. Type `q' to cancel
-;;  4. Type `e' to edit a bookmark on a bookmark name.(Editing mode)
-;;   4.1. Type `d' on a file to delete from the bookmark
-;;   4.2. Type `q' to cancel Editing mode
-;;
+;; C-c b c to call the buffers' bookmarks
+;; 1. Type ENTER, or Double Click, on a bookmark name to open it.
+;; 2. Type `d' on a bookmark name to delete the bookmark.
+;; 3. Type `q' to cancel
+;; 4. Type `e' on a bookmark name to edit the bookmark.(goto Editing mode)
+;;    4.1. Type `d' on a file to delete from the bookmark.
+;;    4.2. Type `q' to cancel Editing mode.
 ```
 
 ## C-c b s
@@ -51,12 +49,12 @@ _d_
 
 ブックマークを削除。y or n。
 
-_e_
-
-ブックマーク編集モード。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。
-
 _q_
 
 ブックマーク一覧モード終了
+
+_e_
+
+ブックマーク編集モードへ。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。
 
 
