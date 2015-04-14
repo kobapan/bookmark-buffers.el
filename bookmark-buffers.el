@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/04/13 20:15:46>
+;; Last Modified: <2015/04/14 18:43:17>
 ;; Auther: <kobapan>
 ;;
 
@@ -196,7 +196,7 @@ nil : overwite buffers list with current buffers")
   (with-temp-file bookmark-buffers-list-file
     (let ((standard-output (current-buffer)))
       (prin1 bookmark-list)))
-  (message "bookmark-buffers: saved !"))
+  (message "bookmark-buffers: done !"))
 
 (defun bb:get-bookmark-key ()
   "*bookmark-buffers*で現在ポイントされている行を読み込む"
