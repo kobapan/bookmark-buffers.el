@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/04/14 18:43:17>
+;; Last Modified: <2015/07/02 13:40:30>
 ;; Auther: <kobapan>
 ;;
 
@@ -186,7 +186,7 @@ nil : overwite buffers list with current buffers")
       (set-buffer (find-file-noselect bookmark-buffers-list-file))
       (widen)
       (goto-char 1)
-      (when (buffer-size)
+      (when (< 0 (buffer-size))
         (setq res (read (current-buffer))))
       (kill-buffer))
     res))
