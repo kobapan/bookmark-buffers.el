@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2015/07/02 13:40:30>
+;; Last Modified: <2016/07/11 07:29:41>
 ;; Auther: <kobapan>
 ;;
 
@@ -46,6 +46,11 @@
 ;;    4.1. Type `d' on a file to delete from the bookmark.
 ;;    4.2. Type `q' to cancel Editing mode.
 
+
+;; TODO
+;;
+;; bb:read-something-with が prefix を受け取れるようにする
+;;
 
 ;;;;;; custom variables
 
