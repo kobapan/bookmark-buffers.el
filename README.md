@@ -58,3 +58,9 @@ _e_
 ブックマーク編集モードへ。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。
 
 
+## custom variables
+
+bookmark-buffers-save-append
+default nil
+t : save bookmark-buffers appending currently opened buffers
+nil : overwite bookmark-buffers with only current buffers

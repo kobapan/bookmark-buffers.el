@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2016/07/27 13:49:58>
+;; Last Modified: <2016/07/27 13:55:52>
 ;; Auther: <kobapan>
 ;;
 
@@ -52,8 +52,8 @@
 
 (defcustom bookmark-buffers-save-append nil
 "custom variable used in bookmark-buffers.el
-t : save buffers list appending current buffers
-nil : overwite buffers list with current buffers")
+t : save bookmark-buffers appending currently opened buffers
+nil : overwite bookmark-buffers with only current buffers")
 
 ;;;;;; private variables
 
