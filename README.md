@@ -61,6 +61,9 @@ _e_
 ## custom variables
 
 bookmark-buffers-save-append
+
 default nil
+
 t : save bookmark-buffers appending currently opened buffers
+
 nil : overwite bookmark-buffers with only current buffers
