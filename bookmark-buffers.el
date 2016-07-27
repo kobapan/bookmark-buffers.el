@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2016/07/11 07:29:41>
+;; Last Modified: <2016/07/27 13:49:58>
 ;; Auther: <kobapan>
 ;;
 
@@ -47,10 +47,6 @@
 ;;    4.2. Type `q' to cancel Editing mode.
 
 
-;; TODO
-;;
-;; bb:read-something-with が prefix を受け取れるようにする
-;;
 
 ;;;;;; custom variables
 
@@ -236,9 +232,9 @@ nil : overwite buffers list with current buffers")
      ,@body))
 
 (defun bb:read-something-with (alist)
-  "dont save with 0byte key name"
+  "dont save with 0byte bookmark name"
   (let ((res (completing-read
-              "bookmark buffers list with Key Name: "
+              "[save] bookmark-buffers with name: "
               (mapcar (lambda (slot) (car slot)) alist))))
     (or (if (string< "" res) res)
         (bb:read-something-with alist))))
