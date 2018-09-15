@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2016/07/27 13:55:52>
+;; Last Modified: <2018/09/15 21:22:22>
 ;; Auther: <kobapan>
 ;;
 
@@ -233,11 +233,13 @@ nil : overwite bookmark-buffers with only current buffers")
 
 (defun bb:read-something-with (alist)
   "dont save with 0byte bookmark name"
-  (let ((res (completing-read
-              "[save] bookmark-buffers with name: "
-              (mapcar (lambda (slot) (car slot)) alist))))
+  (let* ((default (caar alist))
+         (res (completing-read
+               (concat
+                "[save] bookmark-buffers with name (default " default " ): ")
+               (mapcar (lambda (slot) (car slot)) alist))))
     (or (if (string< "" res) res)
-        (bb:read-something-with alist))))
+        default)))
 
 (defun bb:sort-bookmark-list (this src)
   "this を先頭に"
