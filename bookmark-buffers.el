@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2018/09/15 21:22:22>
+;; Last Modified: <2018/09/15 23:56:26>
 ;; Auther: <kobapan>
 ;;
 
@@ -90,10 +90,12 @@ nil : overwite bookmark-buffers with only current buffers")
   (interactive)
   (let ((bookmark-buffer "*bookmark-buffers*")
         (bookmark-list (bb:load-bookmark-list))
+        (i -1)
         bookmark-key
         this-bookmark
         (map (make-sparse-keymap)))
      (switch-to-buffer bookmark-buffer)
+     (setq mode-name "bookmark-buffers-mode")
      (setq buffer-read-only nil) ; unlock
      (erase-buffer)
      (insert "Type ENTER, or Double Click, on a bookmark name to open it.\n")
@@ -103,13 +105,20 @@ nil : overwite bookmark-buffers with only current buffers")
      (bb:put-bookmark-list bookmark-list)
      (save-excursion
        (mapcar (lambda (this-bookmark)
+                 (when (< (set 'i (1+ i)) 10)
+                   (insert "[" (number-to-string i) "] ")
+                   (define-key map
+                     (number-to-string i)
+                     `(lambda ()
+                        (interactive)
+                        (goto-char ,(point))
+                        (bookmark-buffers-open))))
                  (insert (car this-bookmark))
                  (bb:put-this-bookmark this-bookmark)
                  (insert "\n"))
                bookmark-list))
      (setq buffer-read-only t) ; lock
      (hl-line-mode 1)
-     (setq mode-name "bookmark-buffers-mode")
      (define-key map [double-mouse-1] 'bookmark-buffers-open)
      (define-key map [return] 'bookmark-buffers-open)
      (define-key map "d" 'bookmark-buffers-delete)
