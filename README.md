@@ -2,10 +2,10 @@
 
 プロジェクト管理用 emacs lisp
 
-プロジェクト毎にファイルを開き直すのが大変なので、「今開いているファイルとディレクトリ」にプロジェクト名をつけて保存できるようにしました。
+プロジェクト毎にファイルを開き直すのが大変なので、「今開いているファイルとディレクトリ」に名前をつけて保存できるようにしました。
 
 
-## Installation
+## インストール
 
 Add bookmark-buffers.el to your load path
 
@@ -17,7 +17,7 @@ Add your .emacs
 (global-set-key (kbd "C-c b c") 'bookmark-buffers-call)
 ```
 
-## Usage
+## 使い方
 ```cl
 ;; C-c b s to name a buffers list and save in the buffers' bookmarks
 ;;
@@ -37,7 +37,8 @@ Add your .emacs
 プロジェクト一覧モードへ
 
 ### 一覧の中のプロジェクトをひとつポイントし、_enter_ / _double left click_
-現在開いているファイルを全て閉じて、選択したプロジェクト名に登録しておいたファイル・ディレクトリをすべて開く。
+現在開いているファイルを全て閉じて、選択したプロジェクトに登録されているファイル・ディレクトリをすべて開く。
+一覧の表示順は、最近見た順になっている。直近の0～9番目までは数字を入力するだけで飛べる。
 
 ### _d_
 プロジェクトを削除。y or n。
