@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2018/09/15 23:56:26>
+;; Last Modified: <2018/09/16 10:18:46>
 ;; Auther: <kobapan>
 ;;
 
@@ -59,6 +59,8 @@ nil : overwite bookmark-buffers with only current buffers")
 
 (defvar bookmark-buffers-list-file "~/.emacs.d/.bblist")
 
+(defvar bb:prompt "bookmark-buffers: ")
+
 ;;;;;; interactive functions
 
 ;;;###autoload
@@ -105,7 +107,7 @@ nil : overwite bookmark-buffers with only current buffers")
      (bb:put-bookmark-list bookmark-list)
      (save-excursion
        (mapcar (lambda (this-bookmark)
-                 (when (< (set 'i (1+ i)) 10)
+                 (when (< (set 'i (1+ i)) 10) ; shortcut keys for recent using
                    (insert "[" (number-to-string i) "] ")
                    (define-key map
                      (number-to-string i)
@@ -156,7 +158,7 @@ nil : overwite bookmark-buffers with only current buffers")
   (interactive)
   (let ((file (bb:get-one-file))
         (this-bookmark (bb:get-this-bookmark)))
-    (when (y-or-n-p (concat "delete " file " ? "))
+    (when (y-or-n-p (concat bb:prompt "delete " file " ? "))
       (setf (cadr this-bookmark) (delete file (cadr this-bookmark)))
       (bb:save-bookmark-list
        (bb:sort-bookmark-list this-bookmark (bb:get-bookmark-list)))
@@ -176,7 +178,7 @@ nil : overwite bookmark-buffers with only current buffers")
 (defun bookmark-buffers-delete ()
   "delete a bookmark on the point"
   (interactive)
-  (when (y-or-n-p (concat "delete " (bb:get-bookmark-key) " ? "))
+  (when (y-or-n-p (concat bb:prompt "delete " (bb:get-bookmark-key) " ? "))
     (bb:save-bookmark-list (delq (bb:get-this-bookmark) (bb:get-bookmark-list)))
     (bookmark-buffers-call)))
 
@@ -206,7 +208,7 @@ nil : overwite bookmark-buffers with only current buffers")
   (with-temp-file bookmark-buffers-list-file
     (let ((standard-output (current-buffer)))
       (prin1 bookmark-list)))
-  (message "bookmark-buffers: done !"))
+  (message (concat bb:prompt "done !")))
 
 (defun bb:get-bookmark-key ()
   "*bookmark-buffers*で現在ポイントされている行を読み込む"
@@ -245,10 +247,12 @@ nil : overwite bookmark-buffers with only current buffers")
   (let* ((default (caar alist))
          (res (completing-read
                (concat
-                "[save] bookmark-buffers with name (default " default " ): ")
+                bb:prompt "save as ( " default " ): ")
                (mapcar (lambda (slot) (car slot)) alist))))
     (or (if (string< "" res) res)
-        default)))
+        (if (y-or-n-p (concat bb:prompt "overwrite [" default "] ? "))
+            default
+          (bb:read-something-with alist)))))
 
 (defun bb:sort-bookmark-list (this src)
   "this を先頭に"
