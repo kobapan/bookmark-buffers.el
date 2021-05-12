@@ -4,7 +4,7 @@
 ;;
 ;; bookmark buffer-list
 ;;
-;; Last Modified: <2018/09/16 10:18:46>
+;; Last Modified: <2021/05/12 11:32:18>
 ;; Auther: <kobapan>
 ;;
 
@@ -59,7 +59,7 @@ nil : overwite bookmark-buffers with only current buffers")
 
 (defvar bookmark-buffers-list-file "~/.emacs.d/.bblist")
 
-(defvar bb:prompt "bookmark-buffers: ")
+(defvar bb:prompt "BB: ")
 
 ;;;;;; interactive functions
 
@@ -103,7 +103,7 @@ nil : overwite bookmark-buffers with only current buffers")
      (insert "Type ENTER, or Double Click, on a bookmark name to open it.\n")
      (insert "Type `d' to delete a bookmark on a bookmark name.\n")
      (insert "Type `e' to edit a bookmark on a bookmark name.\n")
-     (insert "Type `q' to cancel.\n\n")
+     (insert "Type `q' to quit.\n\n")
      (bb:put-bookmark-list bookmark-list)
      (save-excursion
        (mapcar (lambda (this-bookmark)
@@ -139,8 +139,9 @@ nil : overwite bookmark-buffers with only current buffers")
      (setq buffer-read-only nil) ; unlock
      (erase-buffer)
      (insert (concat "Editing a bookmark [" (car this-bookmark) "]\n"))
+     (insert "Type `r' on a file to rename.\n")
      (insert "Type `d' on a file to delete from the bookmark.\n")
-     (insert "Type `q' to cancel Editing mode.\n\n")
+     (insert "Type `q' to quit Editing mode.\n\n")
      (bb:put-bookmark-list bookmark-list)
      (save-excursion
        (mapcar (lambda (file)
@@ -149,15 +150,28 @@ nil : overwite bookmark-buffers with only current buffers")
                  (insert "\n"))
                (cadr this-bookmark)))
      (setq buffer-read-only t)   ; lock
-     (define-key map "d" 'bookmark-buffers-edit-save)
+     (define-key map "r" 'bookmark-buffers-rename-save)
+     (define-key map "d" 'bookmark-buffers-delete-save)
      (define-key map "q" 'bookmark-buffers-call)
      (use-local-map map)))
 
-(defun bookmark-buffers-edit-save ()
-  "save edited bookmark"
+(defun bookmark-buffers-rename-save ()
+  "save renamed bookmark"
+  (interactive)
+  (let* ((file (bb:get-one-file))
+         (this-bookmark (bb:get-this-bookmark)); (a (file1 file2 ...))
+         (new-file (read-string (concat bb:prompt "rename\nfile: " file "\nto: ") file nil file)))
+    (when new-file
+      (setf (cadr this-bookmark) (append (delete file (cadr this-bookmark)) `(,new-file)))
+      (bb:save-bookmark-list
+       (bb:sort-bookmark-list this-bookmark (bb:get-bookmark-list)))
+      (bookmark-buffers-edit))))
+
+(defun bookmark-buffers-delete-save ()
+  "save deleted bookmark"
   (interactive)
   (let ((file (bb:get-one-file))
-        (this-bookmark (bb:get-this-bookmark)))
+        (this-bookmark (bb:get-this-bookmark))); (a (file1 file2 ...))
     (when (y-or-n-p (concat bb:prompt "delete " file " ? "))
       (setf (cadr this-bookmark) (delete file (cadr this-bookmark)))
       (bb:save-bookmark-list
@@ -208,7 +222,7 @@ nil : overwite bookmark-buffers with only current buffers")
   (with-temp-file bookmark-buffers-list-file
     (let ((standard-output (current-buffer)))
       (prin1 bookmark-list)))
-  (message (concat bb:prompt "done !")))
+  (message (concat bb:prompt "updated.")))
 
 (defun bb:get-bookmark-key ()
   "*bookmark-buffers*で現在ポイントされている行を読み込む"
