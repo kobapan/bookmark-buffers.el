@@ -2,26 +2,12 @@
 
 ;; Information: <bookmark-buffers.el>
 ;;
-;; bookmark buffer-list
-;;
-;; Last Modified: <2021/05/12 11:32:18>
-;; Auther: <kobapan>
-;;
+;; bookmark buffers-list
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2 of the License, or
 ;; (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, write to the Free Software
-;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-;;
 
 ;; Installation
 ;;
@@ -47,13 +33,12 @@
 ;;    4.2. Type `q' to cancel Editing mode.
 
 
-
 ;;;;;; custom variables
 
 (defcustom bookmark-buffers-save-append nil
 "custom variable used in bookmark-buffers.el
-t : save bookmark-buffers appending currently opened buffers
-nil : overwite bookmark-buffers with only current buffers")
+t : save a project's bookmark appending currently opened buffers
+nil : overwite a project's bookmark with only current buffers")
 
 ;;;;;; private variables
 
@@ -70,15 +55,32 @@ nil : overwite bookmark-buffers with only current buffers")
   (let* ((bookmark-list (bb:load-bookmark-list))
          (bookmark-key (bb:read-something-with bookmark-list))
          (this-bookmark (assoc bookmark-key bookmark-list))
-         (completion-ignore-case t))
+         (completion-ignore-case t)
+         (w (window-state-get (frame-root-window) t)))
+    
     (if this-bookmark
+        ;; 既存のプロジェクト
         (progn
           (setf (cadr this-bookmark)
                 (if bookmark-buffers-save-append
-                    (delete-dups (append (bb:buffer-list-real) (cadr this-bookmark))) ;; 追加
-                  (bb:buffer-list-real)))                                          ;; 上書き
+                    (delete-dups (append (bb:buffer-list-real) (cadr this-bookmark))) ;; 追加のみ
+                  (bb:buffer-list-real)))                                          ;; 今開いて無いファイルは削除
+          
+          ;; window の状態を添付
+          (if (caddr this-bookmark)
+              (setf (caddr this-bookmark) `(,(prin1-to-string w)))
+            (setq this-bookmark (append this-bookmark `(,(prin1-to-string w)))))
+
+          ;; 追加or削除したブックマークリストを作成
           (setq bookmark-list (bb:sort-bookmark-list this-bookmark bookmark-list)))
-      (setq bookmark-list (cons (list bookmark-key (bb:buffer-list-real)) bookmark-list))) ;; 新規
+      
+      ;; 新規のプロジェクトを追加したブックマークリストを作成
+      ;; bookmark-key : プロジェクト名
+      ;; (bb:buffer-list-real) : ファイルとディレクトリのリスト
+      ;; (window-state-get) : windowの状態
+      (setq bookmark-list (cons (list bookmark-key (bb:buffer-list-real) `(,(prin1-to-string w))) bookmark-list)))
+
+    ;; ファイルに保存
     (bb:save-bookmark-list bookmark-list)))
 
 ;;;###autoload
@@ -186,8 +188,12 @@ nil : overwite bookmark-buffers with only current buffers")
     (bb:save-bookmark-list
      (bb:sort-bookmark-list this-bookmark (bb:get-bookmark-list)))
     (bb:kill-all-buffers)
-    (mapcar (lambda (file) (find-file file))
-            (reverse (cadr this-bookmark)))))
+    (mapc (lambda (file) (find-file file))
+          (reverse (cadr this-bookmark)))
+    ;; window 状態を復元
+    (if (caddr this-bookmark)
+        (window-state-put (read (caddr this-bookmark))))
+    ))
 
 (defun bookmark-buffers-delete ()
   "delete a bookmark on the point"
@@ -273,7 +279,7 @@ nil : overwite bookmark-buffers with only current buffers")
 
 (defun bb:sort-bookmark-list (this src)
   "this を先頭に"
-  (cons this (delq this src)))
+  (cons this (delq (assoc (car this) src) src)))
 
 (defun bb:buffer-list-real ()
   "list up files and directories with `full path` from buffer list

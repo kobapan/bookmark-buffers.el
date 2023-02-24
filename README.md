@@ -2,8 +2,7 @@
 
 プロジェクト管理用 emacs lisp
 
-プロジェクト毎にファイルを開き直すのが大変なので、「今開いているファイルとディレクトリ」に名前をつけて保存できるようにしました。
-
+「複数開いているファイル、ディレクトリ、ウィンドウの状態」に名前をつけて保存しておいて、いつでも開き直せる。プロジェクト毎に複数開いていたウィンドウを開きなおし、サイズも一つ一つ調整する。
 
 ## インストール
 
@@ -18,17 +17,6 @@ Add your .emacs
 ```
 
 ## 使い方
-```cl
-;; C-c b s to name a buffers list and save in the buffers' bookmarks
-;;
-;; C-c b c to call the buffers' bookmarks
-;; 1. Type ENTER, or Double Click, on a bookmark name to open it.
-;; 2. Type `d' on a bookmark name to delete the bookmark.
-;; 3. Type `q' to cancel
-;; 4. Type `e' on a bookmark name to edit the bookmark.(goto Editing mode)
-;;    4.1. Type `d' on a file to delete from the bookmark.
-;;    4.2. Type `q' to cancel Editing mode.
-```
 
 ### C-c b s
 「現在開いているファイルとディレクトリ」にプロジェクト名をつけて保存する。
@@ -56,6 +44,6 @@ bookmark-buffers-save-append
 
 default nil
 
-t : save bookmark-buffers appending currently opened buffers
+t : プロジェクトに現在開いているバッファを追加
 
-nil : overwite bookmark-buffers with only current buffers
+nil : プロジェクトの中身を現在開いているバッファと入れ替える
