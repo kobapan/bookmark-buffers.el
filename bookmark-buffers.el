@@ -217,6 +217,9 @@ nil : overwite bookmark-buffers with only current buffers")
       (kill-buffer))
     res))
 
+;; TODO  ウィンドウ状態の保存と再現
+;; (let ((state (window-state-get)))
+;;    (window-state-put state))
 (defun bb:save-bookmark-list (bookmark-list)
   ".bblistにバッファリストのリストを保存する"
   (with-temp-file bookmark-buffers-list-file
