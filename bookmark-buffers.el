@@ -68,7 +68,7 @@ nil : overwite a project's bookmark with only current buffers")
           
           ;; window の状態を添付
           (if (caddr this-bookmark)
-              (setf (caddr this-bookmark) `(,(prin1-to-string w)))
+              (setf (caddr this-bookmark) (prin1-to-string w))
             (setq this-bookmark (append this-bookmark `(,(prin1-to-string w)))))
 
           ;; 追加or削除したブックマークリストを作成
@@ -78,7 +78,7 @@ nil : overwite a project's bookmark with only current buffers")
       ;; bookmark-key : プロジェクト名
       ;; (bb:buffer-list-real) : ファイルとディレクトリのリスト
       ;; (window-state-get) : windowの状態
-      (setq bookmark-list (cons (list bookmark-key (bb:buffer-list-real) `(,(prin1-to-string w))) bookmark-list)))
+      (setq bookmark-list (cons (list bookmark-key (bb:buffer-list-real) (prin1-to-string w)) bookmark-list)))
 
     ;; ファイルに保存
     (bb:save-bookmark-list bookmark-list)))
