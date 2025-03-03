@@ -105,7 +105,7 @@ nil : overwite a project's bookmark with only current buffers")
      (setq mode-name "bookmark-buffers-mode")
      (setq buffer-read-only nil) ; unlock
      (erase-buffer)
-     (insert "Type ENTER, or Double Click, on a bookmark name to open it.\n")
+     (insert "Type ENTER, or Double Click, on a bookmark to open it.\n")
      (insert "Type `d' to delete a bookmark.\n")
      (insert "Type `e' to edit a bookmark.\n")
      (insert "Type `q' to quit.\n\n")
