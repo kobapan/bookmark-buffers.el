@@ -31,7 +31,10 @@
 ;; 4. Type `e' on a bookmark name to edit the bookmark.(goto Editing mode)
 ;;    4.1. Type `d' on a file to delete from the bookmark.
 ;;    4.2. Type `q' to cancel Editing mode.
-
+;;
+;; TODO
+;; bookmark-buffers-open の際に、今まで開いていたプロジェクトの状態を
+;; 保存するオプションを追加する
 
 ;;;;;; custom variables
 
@@ -103,8 +106,8 @@ nil : overwite a project's bookmark with only current buffers")
      (setq buffer-read-only nil) ; unlock
      (erase-buffer)
      (insert "Type ENTER, or Double Click, on a bookmark name to open it.\n")
-     (insert "Type `d' to delete a bookmark on a bookmark name.\n")
-     (insert "Type `e' to edit a bookmark on a bookmark name.\n")
+     (insert "Type `d' to delete a bookmark.\n")
+     (insert "Type `e' to edit a bookmark.\n")
      (insert "Type `q' to quit.\n\n")
      (bb:put-bookmark-list bookmark-list)
      (save-excursion
