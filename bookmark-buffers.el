@@ -60,23 +60,25 @@ nil : overwite a project's bookmark with only current buffers")
          (this-bookmark (assoc bookmark-key bookmark-list))
          (completion-ignore-case t)
          (w (window-state-get (frame-root-window) t)))
-    
+
     (if this-bookmark
         ;; 既存のプロジェクト
         (progn
           (setf (cadr this-bookmark)
                 (if bookmark-buffers-save-append
-                    (delete-dups (append (bb:buffer-list-real) (cadr this-bookmark))) ;; 追加のみ
-                  (bb:buffer-list-real)))                                          ;; 今開いて無いファイルは削除
-          
-          ;; window の状態を添付
+                    (delete-dups (append (bb:buffer-list-real)
+                                         (cadr this-bookmark))) ;; 追加のみ
+                  (bb:buffer-list-real))) ;; 今開いて無いファイルは削除
+
+          ;; window の状態を保存
           (if (caddr this-bookmark)
               (setf (caddr this-bookmark) (prin1-to-string w))
             (setq this-bookmark (append this-bookmark `(,(prin1-to-string w)))))
 
           ;; 追加or削除したブックマークリストを作成
-          (setq bookmark-list (bb:sort-bookmark-list this-bookmark bookmark-list)))
-      
+          (setq bookmark-list (bb:sort-bookmark-list
+                               this-bookmark bookmark-list)))
+
       ;; 新規のプロジェクトを追加したブックマークリストを作成
       ;; bookmark-key : プロジェクト名
       ;; (bb:buffer-list-real) : ファイルとディレクトリのリスト
@@ -95,45 +97,54 @@ nil : overwite a project's bookmark with only current buffers")
  [q]: ブックマーク一覧モード終了
  [e]: ブックマーク編集。ブックマークの中に登録してあるファイルを [d] で削除。 y or n。 [q] でブックマーク一覧に戻る。"
   (interactive)
-  (let ((bookmark-buffer "*bookmark-buffers*")
-        (bookmark-list (bb:load-bookmark-list))
-        (i -1)
-        bookmark-key
-        this-bookmark
-        (map (make-sparse-keymap)))
-     (switch-to-buffer bookmark-buffer)
-     (setq mode-name "bookmark-buffers-mode")
-     (setq buffer-read-only nil) ; unlock
-     (erase-buffer)
-     (insert "Type ENTER, or Double Click, on a bookmark to open it.\n")
-     (insert "Type `d' to delete a bookmark.\n")
-     (insert "Type `e' to edit a bookmark.\n")
-     (insert "Type `q' to quit.\n\n")
-     (bb:put-bookmark-list bookmark-list)
-     (save-excursion
-       (mapcar (lambda (this-bookmark)
-                 (when (< (set 'i (1+ i)) 10) ; shortcut keys for recent using
-                   (insert "[" (number-to-string i) "] ")
-                   (define-key map
-                     (number-to-string i)
-                     `(lambda ()
-                        (interactive)
-                        (goto-char ,(point))
-                        (bookmark-buffers-open))))
-                 (insert (car this-bookmark))
-                 (bb:put-this-bookmark this-bookmark)
-                 (insert "\n"))
-               bookmark-list))
-     (setq buffer-read-only t) ; lock
-     (hl-line-mode 1)
-     (define-key map [double-mouse-1] 'bookmark-buffers-open)
-     (define-key map [return] 'bookmark-buffers-open)
-     (define-key map "d" 'bookmark-buffers-delete)
-     (define-key map "e" 'bookmark-buffers-edit)
-     (define-key map "q" 'bookmark-buffers-quit)
-     (use-local-map map)
-     ;(isearch-forward)
-     ))
+  (let* ((bookmark-buffer "*bookmark-buffers*")
+         (bookmark-list (bb:load-bookmark-list))
+         (bookmark-key (bb:read-something-with bookmark-list t))
+         (this-bookmark (assoc bookmark-key bookmark-list))
+         (w (window-state-get (frame-root-window) t))
+         (i -1)
+         ;;bookmark-key
+         ;;this-bookmark
+         (map (make-sparse-keymap)))
+
+    ;; window の状態を保存
+    (if (caddr this-bookmark)
+        (setf (caddr this-bookmark) (prin1-to-string w))
+      (setq this-bookmark (append this-bookmark `(,(prin1-to-string w)))))
+
+    (switch-to-buffer bookmark-buffer)
+    (setq mode-name "bookmark-buffers-mode")
+    (setq buffer-read-only nil) ; unlock
+    (erase-buffer)
+    (insert "Type ENTER, or Double Click, on a bookmark to open it.\n")
+    (insert "Type `d' to delete a bookmark.\n")
+    (insert "Type `e' to edit a bookmark.\n")
+    (insert "Type `q' to quit.\n\n")
+    (bb:put-bookmark-list bookmark-list)
+    (save-excursion
+      (mapcar (lambda (this-bookmark)
+                (when (< (set 'i (1+ i)) 10) ; shortcut keys for recent using
+                  (insert "[" (number-to-string i) "] ")
+                  (define-key map
+                    (number-to-string i)
+                    `(lambda ()
+                       (interactive)
+                       (goto-char ,(point))
+                       (bookmark-buffers-open))))
+                (insert (car this-bookmark))
+                (bb:put-this-bookmark this-bookmark)
+                (insert "\n"))
+              bookmark-list))
+    (setq buffer-read-only t) ; lock
+    (hl-line-mode 1)
+    (define-key map [double-mouse-1] 'bookmark-buffers-open)
+    (define-key map [return] 'bookmark-buffers-open)
+    (define-key map "d" 'bookmark-buffers-delete)
+    (define-key map "e" 'bookmark-buffers-edit)
+    (define-key map "q" 'bookmark-buffers-quit)
+    (use-local-map map)
+    ;;(isearch-forward)
+    ))
 
 (defun bookmark-buffers-edit ()
   "edit a bookmark"
@@ -187,6 +198,7 @@ nil : overwite a project's bookmark with only current buffers")
   "open files and directories in a bookmark"
   (interactive)
   (let ((this-bookmark (bb:get-this-bookmark)))
+
     ;; カレントなバッファリストを先頭に並べ替え
     (bb:save-bookmark-list
      (bb:sort-bookmark-list this-bookmark (bb:get-bookmark-list)))
@@ -226,9 +238,6 @@ nil : overwite a project's bookmark with only current buffers")
       (kill-buffer))
     res))
 
-;; TODO  ウィンドウ状態の保存と再現
-;; (let ((state (window-state-get)))
-;;    (window-state-put state))
 (defun bb:save-bookmark-list (bookmark-list)
   ".bblistにバッファリストのリストを保存する"
   (with-temp-file bookmark-buffers-list-file
@@ -268,17 +277,21 @@ nil : overwite a project's bookmark with only current buffers")
          (end (progn (end-of-line) (point))))
      ,@body))
 
-(defun bb:read-something-with (alist)
+(defun bb:read-something-with (alist &optional noprompt)
   "dont save with 0byte bookmark name"
-  (let* ((default (caar alist))
-         (res (completing-read
-               (concat
-                bb:prompt "save as ( " default " ): ")
-               (mapcar (lambda (slot) (car slot)) alist))))
-    (or (if (string< "" res) res)
-        (if (y-or-n-p (concat bb:prompt "overwrite [" default "] ? "))
-            default
-          (bb:read-something-with alist)))))
+  (let ((default (caar alist))
+        res)
+    (if noprompt
+        default
+      (progn
+        (setq res (completing-read
+                   (concat
+                    bb:prompt "save as ( " default " ): ")
+                   (mapcar (lambda (slot) (car slot)) alist)))
+        (or (if (string< "" res) res)
+            (if (y-or-n-p (concat bb:prompt "overwrite [" default "] ? "))
+                default
+              (bb:read-something-with alist)))))))
 
 (defun bb:sort-bookmark-list (this src)
   "this を先頭に"
