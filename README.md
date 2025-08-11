@@ -40,12 +40,18 @@ Add your .emacs
 
 ## custom variables
 
-bookmark-buffers-save-append
+### bookmark-buffers-save-append
 
-保存/上書きの際の挙動を決める。プロジェクトにファイルを追加、または削除する。
+プロジェクトを保存する際の挙動を決める。default nil
 
-default nil
+t : プロジェクトに、現在開いているバッファを追加する。
 
-t : プロジェクトに現在開いているバッファを追加
+nil : プロジェクトの中身を現在開いているバッファと入れ替える。現在開いてないバッファはプロジェクトから削除される。
 
-nil : プロジェクトの中身を現在開いているバッファと入れ替える（開いてないバッファは削除される）
+### bookmark-buffers-open-window-state
+
+プロジェクト一覧モードへ移る際に、現在のプロジェクトのoウィンドウの状態を保存するかどうかを決める。 default t
+
+t: 今開いているプロジェクトのウィンドウの状態を保存する。
+
+nil: 保存しない。

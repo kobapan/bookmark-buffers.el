@@ -33,8 +33,10 @@
 ;;    4.2. Type `q' to cancel Editing mode.
 ;;
 ;; TODO
-;; bookmark-buffers-open の際に、今まで開いていたプロジェクトの状態を
-;; 保存するオプションを追加する
+;; bookmark-buffers-call の際に、windowの状態を保存するが、
+;; bookmark-buffers に登録のあるプロジェクトを開いているのかどうか
+;; を判断しないといけない。プロジェクトを呼び出したときは、なにかダミーファイルを
+;; 開いておくとか。
 
 ;;;;;; custom variables
 
@@ -43,9 +45,16 @@
 t : save a project's bookmark appending currently opened buffers
 nil : overwite a project's bookmark with only current buffers")
 
+(defcustom bookmark-buffers-update-window-state t
+"custom variable used in bookmark-buffers.el
+t : update a window state of `this-bookmark`
+nil : do not update a window state of `this-bookmark`")
+
 ;;;;;; private variables
 
 (defvar bookmark-buffers-list-file "~/.emacs.d/.bblist")
+
+;;(defvar bookmark-buffers-tmp-file "~/.emacs.d/.bbtmp")
 
 (defvar bb:prompt "BB: ")
 
@@ -103,14 +112,13 @@ nil : overwite a project's bookmark with only current buffers")
          (this-bookmark (assoc bookmark-key bookmark-list))
          (w (window-state-get (frame-root-window) t))
          (i -1)
-         ;;bookmark-key
-         ;;this-bookmark
          (map (make-sparse-keymap)))
 
-    ;; window の状態を保存
-    (if (caddr this-bookmark)
-        (setf (caddr this-bookmark) (prin1-to-string w))
-      (setq this-bookmark (append this-bookmark `(,(prin1-to-string w)))))
+    (if bookmark-buffers-update-window-state
+        ;; window の状態を保存
+        (if (caddr this-bookmark)
+            (setf (caddr this-bookmark) (prin1-to-string w))
+          (setq this-bookmark (append this-bookmark `(,(prin1-to-string w))))))
 
     (switch-to-buffer bookmark-buffer)
     (setq mode-name "bookmark-buffers-mode")
