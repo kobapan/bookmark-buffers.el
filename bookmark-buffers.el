@@ -37,8 +37,8 @@
 
 (defcustom bookmark-buffers-save-append nil
 "custom variable used in bookmark-buffers.el
-t : save a project's bookmark appending currently opened buffers
-nil : overwite a project's bookmark with only current buffers")
+t : save `this-bookmark` appending currently opened buffers
+nil : overwite `this-bookmark` with only currently opened buffers")
 
 (defcustom bookmark-buffers-update-window-state t
 "custom variable used in bookmark-buffers.el
