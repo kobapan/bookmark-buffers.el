@@ -36,7 +36,8 @@
 ;;;;;; custom variables
 
 (defcustom bookmark-buffers-save-append nil
-"custom variable used in bookmark-buffers.el
+  "custom variable used in bookmark-buffers.el
+this variable change behavior of saving `this-bookmark`.
 t : append currently opened buffers to `this-bookmark`
 nil : overwite `this-bookmark` with only currently opened buffers")
 
