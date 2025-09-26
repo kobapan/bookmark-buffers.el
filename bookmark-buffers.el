@@ -32,11 +32,6 @@
 ;;    4.1. Type `d' on a file to delete from the bookmark.
 ;;    4.2. Type `q' to cancel Editing mode.
 ;;
-;; TODO
-;; bookmark-buffers-call の際に、windowの状態を保存するが、
-;; bookmark-buffers に登録のあるプロジェクトを開いているのかどうか
-;; を判断しないといけない。プロジェクトを呼び出したときは、なにかダミーファイルを
-;; 開いておくとか。
 
 ;;;;;; custom variables
 
